@@ -13,7 +13,6 @@ const ItemPanel = ({pageTitle, filteredCompleted, filteredImportant}) => {
     const user = useSelector(state => state.auth.authData);
     const userKey = user?.sub;
 
-
     const getItemsData = useSelector(state => state.api.getItemsData);
     const dispatch = useDispatch();
     
