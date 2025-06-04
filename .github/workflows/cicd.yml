@@ -15,22 +15,12 @@ jobs:
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4 # github 제공 액션?
-      
-      # [제거됨] 빌드 시점 .env 파일 생성
-      # - name: Create .env file
-      #   run: echo "${{ secrets.FRONT_ENVS }}" > .env
-      # 이유: Docker 빌드 컨텍스트에 .env 파일이 포함되더라도 
-      #       실제 컨테이너 실행 시에는 환경변수가 필요하지 않음
-      
+      - name: Create .env file
+        run: echo "${{ secrets.FRONT_ENVS }}" > .env
       - name: Sign in to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      
-      # [수정됨] 빌드 시점 환경변수 전달 제거
       - name: Build Docker image
-        run: docker build -t namyd/task_front .
-        # 이전: docker build --build-arg FRONT_ENVS="${{ secrets.FRONT_ENVS }}" -t namyd/task_front .
-        # 이유: 환경변수를 이미지에 포함시키지 않고 런타임에 주입하기 위해 제거
-      
+        run: docker build --build-arg FRONT_ENVS="${{ secrets.FRONT_ENVS }}" -t namyd/task_front .
       - name : Push Docker Image
         run: docker push namyd/task_front:latest
 
@@ -42,13 +32,5 @@ jobs:
         run: docker pull namyd/task_front:latest
       - name: Delete Existing Container
         run: docker rm -f task-container
-      
-      # [유지됨] 런타임 환경변수 주입
       - name: Run container
-        run: docker run -d -p 80:80 --name task-container \
-          -e FRONT_ENVS="${{ secrets.FRONT_ENVS }}" \
-          --entrypoint "/bin/sh" \
-          namyd/task_front \
-          -c "echo \"window.ENV = $FRONT_ENVS\" > /usr/share/nginx/html/env.js && nginx -g 'daemon off;'"
-        # 이유: 컨테이너 실행 시점에 환경변수를 주입하여 
-        #       더 안전하고 유연한 환경변수 관리 가능
+        run: docker run -d -p 80:80 --name task-container -e FRONT_ENVS="${{ secrets.FRONT_ENVS }}" namyd/task_front
