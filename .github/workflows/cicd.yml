@@ -12,7 +12,7 @@ jobs:
     # 실행 환경
     runs-on: ubuntu-latest
     # 작업 단계
-    steps
+    steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4 # github 제공 액션?
 
