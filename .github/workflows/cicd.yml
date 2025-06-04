@@ -1,36 +1,39 @@
-name: CICD
+3.80.138.107name: CICD
 
-# 이벤트가 실행될 workflow 선언
+
+# 이벤트가 실행될 workflow 정의
 on:
   push:
     branches:
       - main
 
-# 작업 처리 : bulid > deploy
+
+# 작업 정의(jobs): build, deploy
 jobs:
   build:
-    # 실행 환경
     runs-on: ubuntu-latest
-    # 작업 단계
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@v4 # github 제공 액션?
-      - name: Create .env file
-        run: echo "${{ secrets.FRONT_ENVS }}" > .env
+        uses: actions/checkout@v4
+      - name: Create env file
+        run: |
+          touch .env
+          echo "${{ secrets.FRONT_ENVS }}" > .env
       - name: Sign in to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build Docker image
-        run: docker build --build-arg FRONT_ENVS="${{ secrets.FRONT_ENVS }}" -t namyd/task_front .
-      - name : Push Docker Image
+      - name: Build Docker Image
+        run: docker build -t namyd/task_front .
+      - name: Push Docker Image
         run: docker push namyd/task_front:latest
+
 
   deploy:
     needs: build
     runs-on: aws-ec2
     steps:
-      - name: Pull image from Docker Hub
+      - name: Pull image from docker hub
         run: docker pull namyd/task_front:latest
       - name: Delete Existing Container
         run: docker rm -f task-container
       - name: Run container
-        run: docker run -d -p 80:80 --name task-container -e FRONT_ENVS="${{ secrets.FRONT_ENVS }}" namyd/task_front
+        run: docker run -d -p 80:80 --name task-container namyd/task_front

@@ -20,7 +20,6 @@ const GoogleMaps = () => {
 
     // 지도
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-    console.log("apiKey :: "+apiKey)
 
     // 정확한 이유는 모르겠는데 이거 처리 안하니까 지맘대로 처음 세팅한 중앙으로 화면이동함.
     const [center, setCenter] = useState({lat: 37.569227, lng: 126.9777256}); 
