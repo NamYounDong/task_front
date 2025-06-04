@@ -66,8 +66,7 @@ const Navbar = () => {
                     </div>
                 ) : (
                     <div className="auth-wrapper flex justify-center w-4/5 login-btn">
-                        {/* <GoogleOAuthProvider clientId={import.meta.env.VITE_AUTH_CLIENT_ID}> */}
-                        <GoogleOAuthProvider clientId={window.ENV.VITE_AUTH_CLIENT_ID}>
+                        <GoogleOAuthProvider clientId={import.meta.env.VITE_AUTH_CLIENT_ID}>
                             <GoogleLogin 
                                 onSuccess={credentialResponse => handleLoginSuccess(credentialResponse)}
                                 onError={() => handleLoginError()}/>
