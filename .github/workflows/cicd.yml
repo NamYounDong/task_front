@@ -15,14 +15,12 @@ jobs:
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4 # github 제공 액션?
-
       - name: Create env file # 환경변수 생성
         run: 
           touch .env
           echo "${{ secrets.FRONT_ENVS }}" > .env # 환경변수 파일에 GIT의 Secret에서 가져온 정보 등록
       - name: Sign in to Docker Hub
-        rund: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Docker Image
         run: docker build -t namyd/task_front .
       - name : Push Docker Image
