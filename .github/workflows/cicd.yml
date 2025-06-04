@@ -18,7 +18,8 @@ jobs:
       - name: Create env file # 환경변수 생성
         run: 
           touch .env
-          echo "${{ secrets.FRONT_ENVS }}" > .env # 환경변수 파일에 GIT의 Secret에서 가져온 정보 등록
+          # 환경변수 파일에 GIT의 Secret에서 가져온 정보 
+          echo "${{ secrets.FRONT_ENVS }}" >  /home/ubuntu/actions-runner/.env 등록
       - name: Sign in to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Docker Image
