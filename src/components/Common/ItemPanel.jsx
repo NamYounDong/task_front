@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Item from './Item'
 import { useSelector, useDispatch } from 'react-redux';
-import AddItem from './addItem';
+import AddItem from './AddItem';
 import PageTitle from './PageTitle';
 import { getTasks, setItemsData } from '../../redux/slices/apiSlices';
 import { SkeletonTheme } from 'react-loading-skeleton';
